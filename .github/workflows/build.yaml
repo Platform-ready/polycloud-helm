@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Install yq
         run: sudo apt-get update && sudo apt-get install -y yq
@@ -48,21 +46,20 @@ jobs:
         run: cat values.yaml
 
       - name: Commit and push
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "bathinamahesh"
-          git config user.email "bathinamahesh5399game@gmail.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           if git diff --quiet; then
             echo "No changes to commit"
           else
             git add values.yaml
             git commit -m "Update Helm chart image tag from ${{ github.event.event_type }}"
-            # Update remote to use token for authentication
             git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository_owner }}/polycloud-helm.git
             git push origin HEAD:main
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Helm Lint
         run: |
