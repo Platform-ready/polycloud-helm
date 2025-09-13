@@ -31,6 +31,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add values.yaml
           git commit -m "Update Helm chart image tag from ${{ github.event.event_type }}" || echo "No changes"
+          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository_owner }}/polycloud-helm.git
           git push
 
       - name: Helm Lint
