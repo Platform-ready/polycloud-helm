@@ -1,5 +1,7 @@
 name: Update Helm Values
 
+permissions:
+  contents: write
 # Triggered when repo1,2,3 dispatch events
 on:
   repository_dispatch:
@@ -11,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Install yq
         run: sudo apt-get update && sudo apt-get install -y yq
