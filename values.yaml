@@ -1,0 +1,11 @@
+monolith:
+  image: ghcr.io/your-org/monolith-app
+  tag: latest
+
+scan:
+  image: ghcr.io/your-org/scan-service
+  tag: latest
+
+storage:
+  image: ghcr.io/your-org/storage-service
+  tag: latest
