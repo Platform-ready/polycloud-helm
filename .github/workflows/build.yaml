@@ -44,20 +44,19 @@ jobs:
         run: cat values.yaml
 
       - name: Commit and push
-        env:
-          GH_PAT: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           if git diff --quiet; then
             echo "No changes to commit"
           else
             git add values.yaml
             git commit -m "Update Helm chart image tag from ${{ github.event.event_type }}"
-            git remote set-url origin https://$GH_PAT@github.com/${{ github.repository_owner }}/polycloud-helm.git
             git push origin HEAD:main
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Helm Lint
         run: |
