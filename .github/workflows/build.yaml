@@ -19,16 +19,17 @@ jobs:
         run: |
           TYPE="${{ github.event.client_payload.type }}"
           TAG="${{ github.event.client_payload.tag }}"
+          ORG="${{ github.repository_owner }}"
 
           case "${TYPE}" in
             update-monolith)
-              sed -i '' "s|monolith:.*|monolith:\n  image: ghcr.io/${{ github.repository_owner }}/monolith-app\n  tag: ${TAG}|" values.yaml
+              yq e -i '.monolith.image = "ghcr.io/'"$ORG"'/monolith-app" | .monolith.tag = "'$TAG'"' values.yaml
               ;;
             update-scan)
-              sed -i '' "s|scan:.*|scan:\n  image: ghcr.io/${{ github.repository_owner }}/scan-service\n  tag: ${TAG}|" values.yaml
+              yq e -i '.scan.image = "ghcr.io/'"$ORG"'/scan-service" | .scan.tag = "'$TAG'"' values.yaml
               ;;
             update-storage)
-              sed -i '' "s|storage:.*|storage:\n  image: ghcr.io/${{ github.repository_owner }}/storage-service\n  tag: ${TAG}|" values.yaml
+              yq e -i '.storage.image = "ghcr.io/'"$ORG"'/storage-service" | .storage.tag = "'$TAG'"' values.yaml
               ;;
             *)
               echo "Unknown event type: ${TYPE}"
