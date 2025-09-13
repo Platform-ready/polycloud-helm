@@ -53,6 +53,8 @@ jobs:
           else
             git add values.yaml
             git commit -m "Update Helm chart image tag from ${{ github.event.event_type }}"
+            # Update remote to use token for authentication
+            git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository_owner }}/polycloud-helm.git
             git push origin HEAD:main
           fi
         env:
