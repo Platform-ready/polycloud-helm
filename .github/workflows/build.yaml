@@ -12,18 +12,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Install yq
+        run: sudo apt-get update && sudo apt-get install -y yq
+
       - name: Update values.yaml
         run: |
-          TYPE="${{ github.event.action || github.event.client_payload.type }}"
           TAG="${{ github.event.client_payload.tag }}"
           
-          if [[ "${{ github.event.event_type }}" == "update-monolith" ]]; then
-            sed -i '' "s|monolith:.*|monolith:\n  image: ghcr.io/${{ github.repository_owner }}/monolith-app\n  tag: ${TAG}|" values.yaml
-          elif [[ "${{ github.event.event_type }}" == "update-scan" ]]; then
-            sed -i '' "s|scan:.*|scan:\n  image: ghcr.io/${{ github.repository_owner }}/scan-service\n  tag: ${TAG}|" values.yaml
-          elif [[ "${{ github.event.event_type }}" == "update-storage" ]]; then
-            sed -i '' "s|storage:.*|storage:\n  image: ghcr.io/${{ github.repository_owner }}/storage-service\n  tag: ${TAG}|" values.yaml
-          fi
+          case "${{ github.event.event_type }}" in
+            update-monolith)
+              yq -i ".monolith.tag = \"${TAG}\"" values.yaml
+              ;;
+            update-scan)
+              yq -i ".scan.tag = \"${TAG}\"" values.yaml
+              ;;
+            update-storage)
+              yq -i ".storage.tag = \"${TAG}\"" values.yaml
+              ;;
+            *)
+              echo "Unknown event type: ${{ github.event.event_type }}"
+              exit 1
+              ;;
+          esac
       - name: Show updated values.yaml
         run: cat values.yaml
 
