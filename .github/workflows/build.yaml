@@ -58,7 +58,7 @@ jobs:
             git push origin HEAD:main
           fi
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Helm Lint
         run: |
