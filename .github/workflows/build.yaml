@@ -27,12 +27,20 @@ jobs:
 
       - name: Commit updated values.yaml
         run: |
+          # Configure Git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Ensure remote uses PAT
+          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository_owner }}/polycloud-helm.git
+
+          # Add and commit changes
           git add values.yaml
           git commit -m "Update Helm chart image tag from ${{ github.event.event_type }}" || echo "No changes"
-          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository_owner }}/polycloud-helm.git
-          git push
+
+          # Push
+          git push origin HEAD:main
+
 
       - name: Helm Lint
         run: |
