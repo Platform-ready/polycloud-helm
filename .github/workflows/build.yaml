@@ -23,16 +23,16 @@ jobs:
 
           case "${TYPE}" in
             update-monolith)
-              yq e -i '.monolith.image = "ghcr.io/'"$ORG"'/monolith-app"' values.yaml
-              yq e -i '.monolith.tag = "'$TAG'"' values.yaml
+              yq -i -y '.monolith.image = "ghcr.io/'"$ORG"'/monolith-app"' values.yaml
+              yq -i -y '.monolith.tag = "'$TAG'"' values.yaml
               ;;
             update-scan)
-              yq e -i '.scan.image = "ghcr.io/'"$ORG"'/scan-service"' values.yaml
-              yq e -i '.scan.tag = "'$TAG'"' values.yaml
+              yq -i -y '.scan.image = "ghcr.io/'"$ORG"'/scan-service"' values.yaml
+              yq -i -y '.scan.tag = "'$TAG'"' values.yaml
               ;;
             update-storage)
-              yq e -i '.storage.image = "ghcr.io/'"$ORG"'/storage-service"' values.yaml
-              yq e -i '.storage.tag = "'$TAG'"' values.yaml
+              yq -i -y '.storage.image = "ghcr.io/'"$ORG"'/storage-service"' values.yaml
+              yq -i -y '.storage.tag = "'$TAG'"' values.yaml
               ;;
             *)
               echo "Unknown event type: ${TYPE}"
